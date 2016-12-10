@@ -186,11 +186,6 @@ var App = React.createClass({
            currentView: movieData.sort(this.movieCompareByTitle),
          })
      }
-     if(view === 'map'){
-         this.setState({
-           currentView: <TheatreMap/>,
-         })
-     }
      this.setState({
        currentView: view
      })
@@ -252,7 +247,7 @@ componentDidMount: function() {
     return (
       <div>
         <Header currentUser={this.state.currentUser} />
-        <SortBar movieCount={this.state.movies.length} viewChanged={this.viewChanged} />
+        <SortBar movieCount={this.state.movies.length} currentView={this.state.currentView} viewChanged={this.viewChanged} />
         <div className="main row">
           {this.renderMainSection()}
         </div>
