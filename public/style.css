@@ -63,8 +63,8 @@ body {
 .sort {
   background-color: #f4f4f4;
 }
-.sort .nav-pills > li.active > a, 
-.sort .nav-pills > li.active > a:focus, 
+.sort .nav-pills > li.active > a,
+.sort .nav-pills > li.active > a:focus,
 .sort .nav-pills > li.active > a:hover {
   background-color: transparent;
   color: #444;

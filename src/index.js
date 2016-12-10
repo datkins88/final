@@ -78,6 +78,16 @@ var Header = React.createClass({
   }
 })
 
+var SortBarItem = React.createClass({
+  render: function() {
+    return (
+      <li className={this.props.currentView === this.props.view ? "active" : ""}>
+        <a href="#" onClick={() => this.props.viewChanged(this.props.view)}>{this.props.title}</a>
+      </li>
+    )
+  }
+})
+
 var SortBar = React.createClass({
   viewChanged: function(view) {
     this.props.viewChanged(view)
@@ -87,10 +97,10 @@ var SortBar = React.createClass({
       <div className="sort row">
         <div className="col-sm-12">
           <ul className="nav nav-pills">
-            <li className="active"><a href="#" onClick={() => this.viewChanged('latest')}>Latest Releases</a></li>
-            <li><a href="#" onClick={() => this.viewChanged('alpha')}>A-Z</a></li>
-            <li><a href="#" onClick={() => this.viewChanged('map')}>Where to Watch</a></li>
-            <li className="nav-text pull-right">{this.props.movieCount} movies</li>
+            <SortBarItem view="latest" title="Latest Releases" currentView={this.props.currentView} viewChanged={this.props.viewChanged}/>
+            <SortBarItem view="alpha" title="A-Z" currentView={this.props.currentView} viewChanged={this.props.viewChanged}/>
+            <SortBarItem view="map" title="Where to Watch" currentView={this.props.currentView} viewChanged={this.props.viewChanged}/>
+            <li className="nav-text pull-right">{this.props.movieCount} movies </li>
           </ul>
         </div>
       </div>
@@ -166,22 +176,26 @@ var App = React.createClass({
     })
   },
   viewChanged: function(view) {
-    if(this.state.currentView === 'latest'){
-      this.setState({
-        movies: this.state.movies.sort(this.movieCompareByReleased)
-        currentView: view
-      })
-    }
-    else if (this.state.currentView === 'alpha'){
-      this.setState({
-        movies: this.state.movies.sort(this.movieCompareByTitle)
-        currentView: view
-      })
-    }
-    else (this.state.currentView === "map"){
-      return <TheatreMap/>
-    }
-  },
+    if(view === 'latest'){
+         this.setState({
+           currentView: movieData.sort(this.movieCompareByReleased),
+         })
+     }
+     if(view === 'alpha'){
+         this.setState({
+           currentView: movieData.sort(this.movieCompareByTitle),
+         })
+     }
+     if(view === 'map'){
+         this.setState({
+           currentView: <TheatreMap/>,
+         })
+     }
+     this.setState({
+       currentView: view
+     })
+   },
+
   renderMovieDetails: function() {
     if (this.state.currentMovie == null) {
       return <NoCurrentMovie resetMovieListClicked={this.resetMovieListClicked} />
@@ -204,30 +218,30 @@ var App = React.createClass({
     }
   },
   movieCompareByTitle: function(movieA, movieB) {
-    if (movieA.title < movieB.title) {
-      return -1
-    } else if (movieA.title > movieB.title) {
-      return 1
-    } else {
-      return 0
-    }
-  },
-  movieCompareByReleased: function(movieA, movieB) {
-    if (movieA.released > movieB.released) {
-      return -1
-    } else if (movieA.released < movieB.released) {
-      return 1
-    } else {
-      return 0
-    }
-  },
-  getInitialState: function() {
-    return {
-      movies: movieData.sort(this.movieCompareByReleased),
-      currentMovie: null
-    }
-  },
-  componentDidMount: function() {
+     if (movieA.title < movieB.title) {
+       return -1
+     } else if (movieA.title > movieB.title) {
+       return 1
+     } else {
+       return 0
+     }
+   },
+   movieCompareByReleased: function(movieA, movieB) {
+     if (movieA.released > movieB.released) {
+       return -1
+     } else if (movieA.released < movieB.released) {
+       return 1
+     } else {
+       return 0
+     }
+   },
+getInitialState: function() {
+     return {
+       movies: movieData.sort(this.movieCompareByReleased),
+       currentMovie: null
+     }
+   },
+componentDidMount: function() {
     base.syncState('/movies', {
       context: this,
       state: 'movies',
